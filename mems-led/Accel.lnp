@@ -1,0 +1,24 @@
+--cpu=Cortex-M4.fp
+".\stm32f4xx_it.o"
+".\stm32f4_discovery_accelerometer.o"
+".\stm32f4_discovery.o"
+".\mems.o"
+".\main.o"
+".\lis302dl.o"
+".\lis3dsh.o"
+".\stm32f4xx_hal.o"
+".\stm32f4xx_hal_cortex.o"
+".\stm32f4xx_hal_gpio.o"
+".\stm32f4xx_hal_pwr.o"
+".\stm32f4xx_hal_pwr_ex.o"
+".\stm32f4xx_hal_rcc.o"
+".\stm32f4xx_hal_rcc_ex.o"
+".\startup_stm32f407xx.o"
+".\system_stm32f4xx_1.o"
+".\stm32f4xx_hal_dma.o"
+".\stm32f4xx_hal_dma_ex.o"
+".\stm32f4xx_hal_i2c.o"
+".\stm32f4xx_hal_spi.o"
+--ro-base 0x08000000 --entry 0x08000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Accel.map" -o .\Accel.axf
