@@ -103,27 +103,63 @@ static void ACCELERO_ReadAcc(void)
 {
   /* Accelerometer variables */
   int16_t buffer[3] = {0};
-  int16_t xval, yval = 0x00;
-  
+	int16_t buffer1[3] = {0};
+  int16_t dx,dy,xval, yval,x1val, y1val = 0x00;
+	
+	
   /* Read Acceleration */
   BSP_ACCELERO_GetXYZ(buffer);
-  
   xval = buffer[0];
   yval = buffer[1];
-  int p,i;
-  p = (yval+2000)*20+20000;
-  BSP_LED_On(LED3);
-  for(i=0;i<p;i++);
+  int py = (yval+2000)*20+20000;
+  int px = (xval+2000)*20+20000;
+  if((ABS(xval))>(ABS(yval)))
+  {
+   if(xval > ThresholdHigh )
+  { 
+			BSP_LED_On(LED5);
+			for(i=0;i<px;i++);
+			BSP_LED_Off(LED5);
+			for(i=0;i<px;i++);
+    }
+    else if(xval < ThresholdLow)
+    { 
+			BSP_LED_On(LED5);
+			for(i=0;i<px;i++);
+			BSP_LED_Off(LED5);
+			for(i=0;i<px;i++);
+    }
+    else
+    { 
+      HAL_Delay(10);
+    }
+  }
+  else
+  {
+    if(yval < ThresholdLow)
+    {
+			BSP_LED_On(LED3);
+			for(i=0;i<py;i++);
+			BSP_LED_Off(LED3);
+			for(i=0;i<py;i++);
+    }
+    else if(yval > ThresholdHigh)
+    {
+			BSP_LED_On(LED3);
+			for(i=0;i<py;i++);
+			BSP_LED_Off(LED3);
+			for(i=0;i<py;i++);
+    } 
+    else
+    { 
+      HAL_Delay(10);
+    }
+  } 
+  
   BSP_LED_Off(LED3);
-  for(i=0;i<p;i++);
-  
-  p = (xval+2000)*20+20000;
-  BSP_LED_On(LED4);
-  for(i=0;i<p;i++);
   BSP_LED_Off(LED4);
-  for(i=0;i<p;i++);
-  
- 
+  BSP_LED_Off(LED5);
+  BSP_LED_Off(LED6);
 }
 
 /**
