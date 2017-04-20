@@ -1,3 +1,3 @@
 # STM32F4-discovery
 
-The project above implemented uses MEMS data to control the LED blinking in the board.
+The repository contains few implementation in STM32F4 discovery board.
