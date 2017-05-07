@@ -35,6 +35,15 @@
   ******************************************************************************
   */
 
+
+/// Program is modified to run servo motor robotic arm..................
+
+/// Edited by: Khanjan Desai(MT2016506)
+
+/// Date: 7th April, 2017
+
+
+
 /* Includes ------------------------------------------------------------------*/
 #include "mems.h"
 
@@ -61,7 +70,6 @@ int16_t ThresholdLow = -200;
 
 /* Private function prototypes -----------------------------------------------*/
 static void ACCELERO_ReadAcc(void);
-void us_Delay(int16_t);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -81,10 +89,9 @@ void ACCELERO_MEMS_Test(void)
   }
   
   UserPressButton = 0;
- // while(!UserPressButton)
-  {
+  
     ACCELERO_ReadAcc();
-  }
+  
 }
 
 /**
@@ -92,84 +99,60 @@ void ACCELERO_MEMS_Test(void)
   * @param  None
   * @retval None
   */
-/*----------------------Angle Calulation-----------------------------------------------*/
-/*   
-		Motor Angle  		 90	 	0	 180
-		Accel Reading 		 200   2000 2000
-		PWM onTime  		2250   700	3800	*/
-
-/*------------------------------Read Accelerometer----------------------------------*/
 static void ACCELERO_ReadAcc(void)
 {
   /* Accelerometer variables */
   int16_t buffer[3] = {0};
-  int16_t xval, yval = 0x00;
-  int16_t on_time = 0;
+	int16_t buffer1[3] = {0};
+  int16_t dx,dy,xval, yval,x1val, y1val = 0x00;
+	
 	
   /* Read Acceleration */
   BSP_ACCELERO_GetXYZ(buffer);
-  
   xval = buffer[0];
   yval = buffer[1];
-  
-		if((ABS(xval))>(ABS(yval)))
-		{
-    if(xval > ThresholdHigh)
-    { 
-			on_time = 2422 - (xval*1550)/1800;		//Motor Angle : 90->0 Pulse ==> Pulse Time 2250->700
-			//on_time = 700;
-      /* LED5 On */
-      BSP_LED_On(LED5);
-      us_Delay(on_time);
+  int py = (yval+2000)*20+20000;
+  int px = (xval+2000)*20+20000;
+  if((ABS(xval))>(ABS(yval)))
+  {
+   if(xval > ThresholdHigh )
+  { 
+			BSP_LED_On(LED5);
+			for(i=0;i<px;i++);
 			BSP_LED_Off(LED5);
-      us_Delay(20000 - on_time);
+			for(i=0;i<px;i++);
     }
     else if(xval < ThresholdLow)
     { 
-	  //on_time = 2077 + (ABS(xval)*1550)/1800;	//Motor Angle : 90->180 Pulse ==> Pulse Time 2250->3800
-			on_time = 3800;
-	  /* LED5 On */
-      BSP_LED_On(LED5);      
-      us_Delay(on_time);
+			BSP_LED_On(LED5);
+			for(i=0;i<px;i++);
 			BSP_LED_Off(LED5);
-      us_Delay(20000 - on_time);
+			for(i=0;i<px;i++);
     }
-    else							//Delay for stable : 90 degre		
+    else
     { 
-      BSP_LED_On(LED5);
-      us_Delay(2250);
-			BSP_LED_Off(LED5);
-      us_Delay(20000 - 2250);
+      HAL_Delay(10);
     }
   }
   else
   {
     if(yval < ThresholdLow)
     {
-      on_time = 2422 - (yval*1550)/1800;	//Motor Angle : 90->0 Pulse ==> Pulse Time 2250->700
-			//on_time = 700;
-      /* LED4 On */
-      BSP_LED_On(LED4);
-      us_Delay(on_time);
-			BSP_LED_Off(LED4);
-      us_Delay(20000 - on_time);
+			BSP_LED_On(LED3);
+			for(i=0;i<py;i++);
+			BSP_LED_Off(LED3);
+			for(i=0;i<py;i++);
     }
     else if(yval > ThresholdHigh)
     {
-     // on_time = 2077 + (ABS(yval)*1550)/1800;	//Motor Angle : 90->180 Pulse ==> Pulse Time 2250->3800
-      on_time = 3800;
-	  /* LED4 On */
-      BSP_LED_On(LED4);      
-      us_Delay(on_time);
-			BSP_LED_Off(LED4);
-      us_Delay(20000 - on_time); 
+			BSP_LED_On(LED3);
+			for(i=0;i<py;i++);
+			BSP_LED_Off(LED3);
+			for(i=0;i<py;i++);
     } 
-    else							//Delay for stable : 90 degre
+    else
     { 
-      BSP_LED_On(LED4);
-      us_Delay(2250);
-			BSP_LED_Off(LED4);
-      us_Delay(20000 - 2250);
+      HAL_Delay(10);
     }
   } 
   
@@ -179,13 +162,6 @@ static void ACCELERO_ReadAcc(void)
   BSP_LED_Off(LED6);
 }
 
-/*------------------------Delay of ~1 microsecond--------------------------------------------*/
-void us_Delay(int16_t period)
-{
-	int16_t i,j;
-	for(i = 0; i < period;i++)
-		for(j = 0; j <= 23;j++);
-}
 /**
   * @}
   */ 
